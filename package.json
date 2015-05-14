@@ -1,0 +1,19 @@
+{
+  "name": "texasinator",
+  "version": "1.0.0",
+  "description": "Simple API for serving data from a PG store",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/mkolb/texasinator.git"
+  },
+  "author": "Matt Kolb",
+  "license": "GPL v3.0",
+  "bugs": {
+    "url": "https://github.com/mkolb/texasinator/issues"
+  },
+  "homepage": "https://github.com/mkolb/texasinator"
+}
