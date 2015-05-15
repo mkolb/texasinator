@@ -32,7 +32,7 @@ server.get("/enrollments", passport.authenticate('basic', { session: false }), f
     if(err) {
       return console.error('could not connect to postgres');
     }
-    client.query('select xmlelement(name student, xmlforest(idnumber as eid,course_shortname as class)) from enrollments', function(err, result) {
+    client.query('select xmlelement(name student, xmlforest(idnumber as eid,course_shortname as class)) from enrollments where role=$1', ['student'], function(err, result) {
       if(err) {
 	return console.error('error running query', err);
       }
