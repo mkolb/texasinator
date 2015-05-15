@@ -1,5 +1,8 @@
 var restify = require('restify');
 var pg = require('pg');
+var passport = require('passport');
+var BasicStrategy = require('passport-http').BasicStrategy;
+var env = process.env.NODE_ENV || 'development';
 var conString = "/var/run/postgresql texasinator";
 
 var server = restify.createServer();
@@ -7,12 +10,25 @@ var server = restify.createServer();
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
+server.use(passport.initialize());
 
 server.listen(3000, function () {
     console.log("Server started @ 3000");
 });
 
-server.get("/enrollments", function (req, res, next) {
+passport.use(new BasicStrategy({
+  },
+  function(username, password, done) {
+    process.nextTick(function () {
+      if (username != process.env.AUTH_USERNAME) { return done(null, false); }
+      if (password == process.env.AUTH_PASSWORD) { return done(null, username); }
+      return done(null, false);
+    });
+  }
+));
+
+
+server.get("/enrollments", passport.authenticate('basic', { session: false }), function (req, res, next) {
   var client = new pg.Client(conString);
   client.connect(function(err) {
     if(err) {
@@ -22,9 +38,16 @@ server.get("/enrollments", function (req, res, next) {
       if(err) {
 	return console.error('error running query', err);
       }
-      res.send(result.rows[0].xmlelement);
+      res.writeHead(200, {
+	'Content-Type': 'application/xml; charset=utf-8'
+      });
+      res.end('<?xml version="1.0"?><enrollments>' + result.rows.map(flattenate).join('') + '</enrollments>');
       client.end();
     });
   });
   return next();
 });
+
+function flattenate(r) {
+  return r.xmlelement;
+}
