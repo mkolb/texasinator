@@ -3,7 +3,7 @@ var pg = require('pg');
 var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
 var env = process.env.NODE_ENV || 'development';
-var conString = "/var/run/postgresql texasinator";
+var conString = process.env.DATABASE_URL || "/var/run/postgresql texasinator";
 
 var server = restify.createServer();
  
@@ -12,9 +12,7 @@ server.use(restify.queryParser());
 server.use(restify.bodyParser());
 server.use(passport.initialize());
 
-server.listen(3000, function () {
-    console.log("Server started @ 3000");
-});
+server.listen(process.env.PORT || 3000);
 
 passport.use(new BasicStrategy({
   },
