@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines": {
+    "node": "0.10.x",
+    "npm": "2.7.1"
+  },
   "repository": {
     "type": "git",
     "url": "ssh://git@github.com/mkolb/texasinator.git"
